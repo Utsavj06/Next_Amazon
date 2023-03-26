@@ -22,9 +22,11 @@ import {
   ListItem,
 } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 function CartScreen() {
-//   const { state } = useContext(Store);
+  const router = useRouter();
+  //   const { state } = useContext(Store);
   const { state, dispatch } = useContext(Store);
 
   const {
@@ -34,14 +36,18 @@ function CartScreen() {
   const updateCartHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
+      window.alert("Sorry. Product is out of stock");
       return;
     }
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...item, quantity } });
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...item, quantity } });
   };
 
   const removeItemHandler = (item) => {
-    dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+    dispatch({ type: "CART_REMOVE_ITEM", payload: item });
+  };
+
+  const checkoutHandler = () => {
+    router.push("/shipping");
   };
 
   return (
@@ -51,7 +57,7 @@ function CartScreen() {
       </Typography>
       {cartItems.length === 0 ? (
         <div>
-          Cart is empty.{' '}
+          Cart is empty.{" "}
           <NextLink href="/" passHref>
             <Link>Go shopping</Link>
           </NextLink>
@@ -134,7 +140,12 @@ function CartScreen() {
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Button variant="contained" color="primary" fullWidth>
+                  <Button
+                    onClick={checkoutHandler}
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                  >
                     Check Out
                   </Button>
                 </ListItem>

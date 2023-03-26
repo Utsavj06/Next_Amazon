@@ -1,13 +1,14 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react'
-import PropTypes from 'prop-types';
-import Head from 'next/head';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { CacheProvider } from '@emotion/react';
-import theme from '../src/theme';
-import createEmotionCache from '../src/createEmotionCache';
-import { StoreProvider } from '../utils/Store';
+import * as React from "react";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import Head from "next/head";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { CacheProvider } from "@emotion/react";
+import theme from "../src/theme";
+import createEmotionCache from "../src/createEmotionCache";
+import { StoreProvider } from "../utils/Store";
+import { SnackbarProvider } from "notistack";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -15,16 +16,15 @@ const clientSideEmotionCache = createEmotionCache();
 export default function MyApp(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
-  const [showChild, setShowChild] = useState(false)
+  const [showChild, setShowChild] = useState(false);
 
   useEffect(() => {
-    setShowChild(true)
-  }, [])
+    setShowChild(true);
+  }, []);
 
   if (!showChild) {
-    return null
+    return null;
   }
-
 
   return (
     <CacheProvider value={emotionCache}>
@@ -32,11 +32,15 @@ export default function MyApp(props) {
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       {/* <ThemeProvider theme={theme}> */}
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        {/* <CssBaseline /> */}
+      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+      {/* <CssBaseline /> */}
+      <SnackbarProvider
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
         <StoreProvider>
           <Component {...pageProps} />
         </StoreProvider>
+      </SnackbarProvider>
       {/* </ThemeProvider> */}
     </CacheProvider>
   );
